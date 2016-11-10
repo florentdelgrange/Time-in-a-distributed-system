@@ -1,0 +1,55 @@
+\documentclass[compress]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[francais]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{hyperref}
+\usepackage[]{algorithm2e}
+\usepackage{amssymb}
+\usepackage{verbatim}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{graphicx}
+\usetheme[navigation]{UMONS}
+
+\author{Clément Tamines, Florent Delgrange}
+\title{Temps, Horloge et l'ordonnancement de évènements dans un système distribué}
+
+\setbeamercovered{transparent} 
+\setbeamertemplate{navigation symbols}{} 
+\institute{UMONS\\Faculté des Sciences\\MA1 Sciences Informatiques\\[2ex]
+  \includegraphics[height=4ex]{UMONS}\hspace{2em}%
+  \raisebox{-1ex}{\includegraphics[height=6ex]{UMONS_FS}}}
+\date{novembre 2016} 
+\definecolor{darkgreen}{rgb}{0.0, 0.2, 0.13}
+\subject{Réseaux II} 
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}
+\tableofcontents
+\end{frame}
+
+\section{Introduction}
+
+\begin{frame}
+\begin{itemize}
+\item Comment classer chronologiquement les évènements dans un système distribué ?
+\item Comment définir le fait qu'un évènement A s'est passé avant un autre évènement B ?
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Système distribué}
+	\begin{definition}
+		Un système distribué est une collection de processus distinct qui sont séparés dans l'espace et qui communiquent entre eux par 			messages.
+	\end{definition}
+\end{frame}
+
+\end{document}

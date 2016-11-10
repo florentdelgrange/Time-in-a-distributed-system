@@ -48,8 +48,34 @@
 \begin{frame}
 \frametitle{Système distribué}
 	\begin{definition}
-		Un système distribué est une collection de processus distinct qui sont séparés dans l'espace et qui communiquent entre eux par 			messages.
+		Un système distribué est une collection de processus distincts qui sont séparés dans l'espace et qui communiquent entre eux par 			messages.
 	\end{definition}
+	Exemples : 
+	\begin{itemize}
+		\item Système de PC inter-connectés à l'aide d'un réseau de communication
+		\item Un simple PC dans lequel l'unité de contrôle , les unités de mémoire et les canaux d'entrées/sorties sont des processus séparés.
+		\item etc
+	\end{itemize}
 \end{frame}
 
+\begin{frame}
+\frametitle{Temps et ordonnancement ?}
+Soient a et b, deux évènements. On dit que\\
+\textit{a est arrivé avant b} si $a$ est arrivé plus tôt dans le temps que $b$.\\
+\textbf{Horloge réelle : }n'est pas forcément exacte et ne fournit pas le temps au sens physique précis ! $\implies$ la relation \textit{est arrivé avant} doit s'exprimer sans horloge réelle.\\
+$\implies$ la relation \textit{est arrivé avant} doit s'exprimer sans horloge réelle.
+\end{frame}
+
+\section{Ordre partiel}
+
+\begin{frame}
+\frametitle{\'Evènements}
+Le système est composé d'une collection de processus et chaque processus est une séquence d'évènements.\\
+exemple : L'exécution d'un sous-programme ou d'une instruction sur un ordinateur peut être considéré comme un évènement.\\
+Les évènements d'un processus forment une séquence où a apparait avant b ssi a est exécuté avant b.
+\begin{figure}
+\includegraphics[scale=0.15]{process1.png}
+\end{figure}
+
+\end{frame}
 \end{document}

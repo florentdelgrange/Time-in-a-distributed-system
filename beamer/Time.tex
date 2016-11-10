@@ -62,8 +62,7 @@
 \frametitle{Temps et ordonnancement ?}
 Soient a et b, deux évènements. On dit que\\
 \textit{a est arrivé avant b} si $a$ est arrivé plus tôt dans le temps que $b$.\\
-\textbf{Horloge réelle : }n'est pas forcément exacte et ne fournit pas le temps au sens physique précis ! $\implies$ la relation \textit{est arrivé avant} doit s'exprimer sans horloge réelle.\\
-$\implies$ la relation \textit{est arrivé avant} doit s'exprimer sans horloge réelle.
+\textbf{Horloge réelle : }n'est pas forcément exacte et ne fournit pas le temps au sens physique précis ! \\ $\implies$ la relation \textit{est arrivé avant} doit s'exprimer sans horloge réelle.\\
 \end{frame}
 
 \section{Ordre partiel}
@@ -76,6 +75,69 @@ Les évènements d'un processus forment une séquence où a apparait avant b ssi
 \begin{figure}
 \includegraphics[scale=0.15]{process1.png}
 \end{figure}
+\end{frame}
+\begin{frame}
+On considère que envoyer/recevoir un message comme un évènement d'un processus.
+\begin{definition}
+La relation $\rightarrow$ sur un ensemble d'évènements d'un système satisfait
+\begin{enumerate}
+\item Si $a$ et $b$ sont des évènements du même processus et a vient avant b, alors $a \rightarrow b$.
+\item Si $a$ correspond à l'envoi d'un message par un processus et b correspond à la réception de ce message par un autre processus, alors $a \rightarrow b$.
+\item $\rightarrow$ est transitif. On dit que 2 évènements $a, b$ sont concurrents ssi $a \not\rightarrow b$ et $b \not\rightarrow a$
+\end{enumerate}
+\end{definition}
+\end{frame}
+
+\begin{frame}
+\begin{figure}
+\includegraphics[scale=0.3]{process2.png}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+  \begin{columns}
+    \begin{column}{.5\textwidth}
+    \begin{block}{}
+		\includegraphics[scale=0.15]{process2.png}
+    \end{block}
+    \end{column}
+	\begin{column}{0.5 \textwidth}
+	\begin{block}{
+		$a \rightarrow b$ signifie que $a$ peut aller vers $b$ sur le diagramme en avançant dans le temps le long du processus et de la ligne de message.}
+		\end{block}
+	\end{column}
+	\end{columns}
+	Par exemple on a $p_1 \rightarrow r_4$  par transitivité avec \\
+	$p_1 \rightarrow q_2$ et $q_2 \rightarrow q_3$ et $q_3 \rightarrow q_4$ et $q_4 \rightarrow r_3$ et $r_3 \rightarrow r_4$\\
+	\textbf{Problème : }on voit par exemple que $q_3$ est concurrent avec $p3$ ; on ne sait pas si $q_3$ s'est passé avant $p_3$ et vice versa.
+\end{frame}
+
+\section{Horloges Logiques}
+
+\begin{frame}
+\frametitle{Horloges logiques}
+Une horloge est juste une façon d'assigner un numéro à un évènement où le numéro correspond au temps où l'évènement s'est produit.\\
+$\implies$ Chaque processus $p_i$ est associé à une horloge $C_i$.\\
+$\implies$ Pour tout évènement $a$ se produisant dans $P_i$, on assigne un nombre $C_i<a>$ \\
+Le système entier est donc représenté par la fonction $C$.\\
+\begin{block}{Propriétés}
+\begin{itemize}
+\item Soit b, un évènement, $C<b> = C_j<b>$ ssi $b$ est un évènement du processus $P_j$.\\
+\item $\forall i$, $C_i$ peut être simplement implémenté à l'aide de compteurs sans mécanisme lié au temps.
+\end{itemize} 
+\end{block}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Timestamp}
+	Pour garantir
+	\begin{block}{2e condition de la définition de $\rightarrow$}
+		Si $a$ correspond à l'envoi d'un message par un processus et b correspond à la réception de ce message par un autre processus, alors $a \rightarrow b$.
+	\end{block}
+	il faut que chaque message $m$ contienne un TimeStamp $T_m$ qui est égal au temps $t$ où le message a été émis. \\
+	\textbf{But : }Lorsqu'un message $m$ est reçu, un processus avance son horloge de telle sorte à ce que celle-ci soit $>$ à $T_m$
 
 \end{frame}
+
 \end{document}

@@ -133,7 +133,7 @@ Le système entier est donc représenté par la fonction $C$.\\
 \begin{block}{Condition faible}
 $a \rightarrow b \implies C$<$a$> $ < C$<$b$>
 \end{block}
-Cette condition n'est pas suffisante pour solutionner le problème de $p_3$ et $q_3$ : on aurait que les deux évènements se passent au même moment avec $C$<$p_3$>$= C$<$q_3$>
+Cela implique que 2 évènements concurrents doivent se produire en même temps. Sur la figure, on a que $p_2$ et $p_3$ sont concurrents de $q_3$. Donc on devrait avoir que $p_2 = p_3 = q_3$ et cela contredit le fait que $p_2 < p_3$.
 \begin{block}{Conditions fortes}
 \begin{enumerate}
 \item Si $a$ et $b$ sont des évènements de $P_i$ et que $a$ vient avant $b$, alors $C_i$<$a$> $<$ $C_i$<$b$>
@@ -142,32 +142,64 @@ Cette condition n'est pas suffisante pour solutionner le problème de $p_3$ et $
 \end{block}
 \end{frame}
 
+%\begin{frame}
+%\begin{figure}
+%		\includegraphics[scale=0.17]{process3.png}
+
+%\end{figure}
+%\textbf{Exemples : }\\
+%		$C$<$p_1$> $< C$<$p_3$>\\
+%		$C$<$q_5$> $< C$<$p_4$>
+%\end{frame}
+
 \begin{frame}
-  \begin{columns}
-    \begin{column}{.5\textwidth}
-    \begin{block}{}
-		\includegraphics[scale=0.17]{process3.png}
-    \end{block}
-    \end{column}
-	\begin{column}{0.5 \textwidth}
-	\begin{block}{Exemples}
-		$C$<$p_1$> $< C$<$p_3$>\\
-		$C$<$q_5$> $< C$<$p_4$>
-	\end{block}
-	\end{column}
-	\end{columns}
+\frametitle{Implémentation}
+On veut garantir que la {\color{cyan} condition 1} soit respectée. Il suffit que $C_i$ se plie à la règle d'implémentation suivante : 
+\begin{block}{IR 1}
+Chaque processus $P_i$ incrémente $C_i$ entre 2 évènements successifs.\\
+Soient $a$, $b$, deux évènements successifs de $P_i$. Alors, $C_i \leftarrow C_i + 1$.
+\end{block}
 \end{frame}
 
+\begin{frame}
+	\frametitle{Implémentation}
+	Pour garantir la {\color{cyan} condition 2}, il faut que chaque message $m$ contienne un TimeStamp $T_m$ qui est égal au temps $t$ où le message a été émis. \\
+	\textbf{But : }Lorsqu'un message $m$ est reçu, un processus avance son horloge de telle sorte à ce que celle-ci soit $>$ à $T_m$
+	\begin{block}{IR 2}
+	\begin{enumerate}[(a)]
+		\item Si un évènement $a$ est l'envoi d'un message $m$ par le processus $P_i$, alors le message $m$ contient un Timestamp $T_m \leftarrow C_i$<$a$>
+		\item Lorsqu'il reçoit un message $m$, le processus $P_j$ met à jour la variable $C_j$ tel que $C_j > T_m$ et $C_j \geq$ valeur courante de $C_j$
+	\end{enumerate}
+	\end{block}
+\end{frame}
+
+\section{\'Evènements totalement ordonnés}
+\begin{frame}
+\frametitle{Ordre total}
+On souhaite avoir un système d'horloge qui satisfait les conditions d'horloge précédemment énoncées et qui met en place un \textit{\textbf{ordre total}}.\\
+\textbf{Rappel : }
+\begin{block}{Ordre Total}
+Une \textbf{relation binaire} $\preceq$ sur un ensemble E est un ordre total si $\forall x, y, z \in E$, \\
+\begin{itemize}
+\item \textbf{Réflexivité :} $x \preceq x$
+\item \textbf{Antisymétrie :} $x \preceq y$ et $y \preceq x \implies x = y$
+\item \textbf{Transitivité :} $x \preceq y$ et $y \preceq z \implies x \preceq z$
+\end{itemize}
+\end{block}
+\end{frame}
 
 \begin{frame}
-	\frametitle{Timestamp}
-	Pour garantir
-	\begin{block}{2e condition de la définition de $\rightarrow$}
-		Si $a$ correspond à l'envoi d'un message par un processus et b correspond à la réception de ce message par un autre processus, alors $a \rightarrow b$.
-	\end{block}
-	il faut que chaque message $m$ contienne un TimeStamp $T_m$ qui est égal au temps $t$ où le message a été émis. \\
-	\textbf{But : }Lorsqu'un message $m$ est reçu, un processus avance son horloge de telle sorte à ce que celle-ci soit $>$ à $T_m$
-
+\frametitle{Ordre Total}
+Soit $\preceq$, un ordre total arbitraire. On définit une relation $\implies$ comme suit :\\
+Si $a \in P_i$ et $b \in P_j$, alors \\
+\[
+	a \Rightarrow b \ \ \text{ssi}
+	\begin{cases}
+		C_i \text{<}a\text{>} < C_j\text{<}b\text{>} \\
+		\text{ou}\\
+		C_i\text{<}a\text{>} = C_j\text{<}b\text{>} \text{ et } P_i \prec P_j
+	\end{cases}
+\]
 \end{frame}
 
 \end{document}

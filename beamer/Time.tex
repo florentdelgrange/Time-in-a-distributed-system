@@ -97,14 +97,10 @@ La relation $\rightarrow$ sur un ensemble d'évènements d'un système satisfait
 \begin{frame}
   \begin{columns}
     \begin{column}{.5\textwidth}
-    \begin{block}{}
 		\includegraphics[scale=0.15]{process2.png}
-    \end{block}
     \end{column}
 	\begin{column}{0.5 \textwidth}
-	\begin{block}{}
 		$a \rightarrow b$ signifie que $a$ peut aller vers $b$ sur le diagramme en avançant dans le temps le long du processus et de la ligne de message.
-		\end{block}
 	\end{column}
 	\end{columns}
 	Par exemple on a $p_1 \rightarrow r_4$  par transitivité avec \\
@@ -234,6 +230,60 @@ Pour éviter ce problème : système d'horloge avec les règles {\color{cyan} IR
 \item On suppose qu'un processus peut envoyer des messages vers tout autre processus.
 \end{enumerate}
 Notons que les deux premières suppositions peuvent être évitées à l'aide d'un \textit{protocole d'acknowledgment} ou par numérotation des messages.
+\end{frame}
+
+\begin{frame}
+\frametitle{Algorithme}
+\begin{itemize}
+\item Tout processus maintient une file de requête (file de priorité) invisible à tout autre processus.
+\item Initialisation de la file : {$T_0:P_0$ [request resource]} avec $\forall i,  T_0 \leq C_{i_0}$ et $P_0$, le processus auquel la ressource est accordée à l'initialisation.
+\end{itemize}
+	\begin{columns}
+    	\begin{column}{.5\textwidth}
+			$P_i$ envoie une requête à la ressource sous forme d'un message contenant $T_m : P_i$ [request resource] à tous les autres processus et place ce message sur sa file de requête où $T_m$ est le timestamp de ce message.
+		\end{column}
+		\begin{column}{.5\textwidth}
+			\includegraphics[scale=0.2]{process8.png}
+		\end{column}
+	\end{columns}
+%\includegraphics[scale=0.1]{process9.png}\includegraphics[scale=0.1]{process10.png}\includegraphics[scale=0.1]{process11.png}
+\end{frame}
+
+\begin{frame}
+\frametitle{Algorithme}
+	\begin{columns}
+    	\begin{column}{.65\textwidth}
+			Lorsque le processus $P_j$ reçoit le message $T_m : P_i$[request resource], celui-ci le place dans sa file de requête et envoie un acknowledgment à $P_i$.
+		\end{column}
+		\begin{column}{.35\textwidth}
+			\includegraphics[scale=0.13]{process9.png}
+		\end{column}
+	\end{columns}
+	
+		\begin{columns}
+    	\begin{column}{.65\textwidth}
+			Pour libérer la ressource, le processus $P_i$ supprime tout $T_m : P_i$[request resource] de sa file de requête et envoie un $P_i$[release resource] sous forme de message à chaque autre processus.
+		\end{column}
+		\begin{column}{.35\textwidth}
+			\includegraphics[scale=0.13]{process10.png}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}
+\begin{columns}
+    	\begin{column}{.65\textwidth}
+			Lorsque le processus $P_j$ reçoit un message contenant $P_i$[release resource], il supprime chaque requête $T_m : P_i$[request resource] de sa file de requête.
+		\end{column}
+		\begin{column}{.35\textwidth}
+			\includegraphics[scale=0.13]{process11.png}
+		\end{column}
+	\end{columns}
+	Finalement, la ressource est accordée au processus $P_i$ lorsque
+	\begin{itemize}
+	\item Il y a un message contenant $T_m : P_i$[request resource] dans sa file de requête qui est ordonnée avant chaque autre requête dans sa file par la relation $\Rightarrow$.
+	\item $P_i$ a reçu un message de tous les autres processus qui est daté après $T_m$.
+	\end{itemize}
 \end{frame}
 
 \end{document}

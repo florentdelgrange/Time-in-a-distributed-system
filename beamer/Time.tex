@@ -190,16 +190,50 @@ Une \textbf{relation binaire} $\preceq$ sur un ensemble E est un ordre total si 
 
 \begin{frame}
 \frametitle{Ordre Total}
-Soit $\preceq$, un ordre total arbitraire. On définit une relation $\implies$ comme suit :\\
+Soit $\preceq$, un ordre total arbitraire sur l'ensemble des processus. On définit la relation $\Rightarrow$ comme suit :\\
 Si $a \in P_i$ et $b \in P_j$, alors \\
 \[
 	a \Rightarrow b \ \ \text{ssi}
 	\begin{cases}
 		C_i \text{<}a\text{>} < C_j\text{<}b\text{>} \\
 		\text{ou}\\
-		C_i\text{<}a\text{>} = C_j\text{<}b\text{>} \text{ et } P_i \prec P_j
+		C_i\text{<}a\text{>} = C_j\text{<}b\text{>} \text{ et } P_i \preceq P_j
 	\end{cases}
 \]
+Avec une telle définition, on a bien que si $a \rightarrow b$, alors $a \Rightarrow b$. (L'ordre partiel est étendu à un ordre total)
+\vspace{.5in}
+
+\^Etre capable d'ordonner totalement les évènements peut être très utile dans l'implémentation d'un système distribué. C'est le but d'un système à horloges logiques.
+\end{frame}
+
+\begin{frame}
+\frametitle{Partage de ressource}
+On considère à présent un système composé d'un ensemble fini de processus qui partagent une ressource unique. On veut que les processus se synchronisent et évitent les conflits.
+\begin{block}{Propriétés}
+\begin{enumerate}
+\item Un processus qui monopolise une ressource doit l'avoir libérée avant d'en monopoliser une autre
+\item Les requêtes pour les ressources doivent être accordées dans l'ordre dans lesquelles elles ont été demandées
+\item Si chaque processus qui détient une ressource la libère, alors on a que chaque requête sera accordée à un moment donné
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}
+Un système d'horloge centrale qui alloue des requêtes dans l'ordre dont elles sont reçues ne fonctionnera pas.\\
+Soient $P_0, P_1, P_2$, des processus. On suppose que $P_1$ envoie une requête à $P_0$ et envoie ensuite
+un message à $P_2$. Lorsque $P_2$ reçoit le message, $P_2$ envoie une requête à $P_0$. Il est possible que la requête de $P_2$ atteigne $P_0$ avant la requête de $P_1$.
+\begin{figure}\includegraphics[scale=0.12]{process4.png}\end{figure}
+La 2e condition de ce système est donc violée si la requête de $P_2$ est accordée en premier.
+\end{frame}
+
+\begin{frame}
+Pour éviter ce problème : système d'horloge avec les règles {\color{cyan} IR 1} et {\color{cyan} IR 2} pour avoir un ordre total $\Rightarrow$ sur les évènements. On y rajoute les suppositions suivantes :
+\begin{enumerate}
+\item On suppose que pour tout processus $P_i$ et $P_j$, les messages envoyés de $P_i$ à $P_j$ sont reçus dans le même ordre qu'ils sont envoyés. \begin{figure}\includegraphics[scale=0.06]{process5.png}\includegraphics[scale=0.06]{process6.png}\end{figure}
+\item On suppose que chaque message envoyé finit toujours par être reçu. \begin{figure}\includegraphics[scale=0.06]{process7.png}\end{figure}
+\item On suppose qu'un processus peut envoyer des messages vers tout autre processus.
+\end{enumerate}
+Notons que les deux premières suppositions peuvent être évitées à l'aide d'un \textit{protocole d'acknowledgment} ou par numérotation des messages.
 \end{frame}
 
 \end{document}

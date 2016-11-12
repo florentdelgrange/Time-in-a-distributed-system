@@ -15,7 +15,7 @@
 \usetheme[navigation]{UMONS}
 
 \author{Clément Tamines, Florent Delgrange}
-\title{Temps, Horloge et l'ordonnancement de évènements dans un système distribué}
+\title[ ]{Time, Clocks, and the Ordering of Events in a Distributed System}
 
 \setbeamercovered{transparent} 
 \setbeamertemplate{navigation symbols}{} 
@@ -25,7 +25,6 @@
 \date{novembre 2016} 
 \definecolor{darkgreen}{rgb}{0.0, 0.2, 0.13}
 \subject{Réseaux II} 
-
 \begin{document}
 
 \begin{frame}
@@ -39,30 +38,47 @@
 \section{Introduction}
 
 \begin{frame}
+\frametitle{Problématiques}
+Dans un système distribué, il n'est pas toujours possible de dire qu'un événement A s'est passé avant un événement B. \\ \bigskip
 \begin{itemize}
-\item Comment classer chronologiquement les évènements dans un système distribué ?
-\item Comment définir le fait qu'un évènement A s'est passé avant un autre évènement B ?
+\item Comment définir un ordre chronologique entre les évènements dans un système distribué ?
+\item Comment définir qu'un évènement A précède un évènement B ?
+\item Comment faire en sorte que cet ordre soit total ?
+\item Comment assurer la fiabilité des mécanismes de synchronisation ?
 \end{itemize}
 \end{frame}
 
 \begin{frame}
 \frametitle{Système distribué}
 	\begin{definition}
-		Un système distribué est une collection de processus distincts qui sont séparés dans l'espace et qui communiquent entre eux par 			messages.
+		Un système distribué consiste en un ensemble de processus séparés dans l'espace et qui communiquent entre eux via 			messages.
 	\end{definition}
+	\bigskip
 	Exemples : 
+	\bigskip
 	\begin{itemize}
-		\item Système de PC inter-connectés à l'aide d'un réseau de communication
-		\item Un simple PC dans lequel l'unité de contrôle , les unités de mémoire et les canaux d'entrées/sorties sont des processus séparés.
-		\item etc
+		\item Ordinateurs dans un réseau
+		\item Plusieurs processus communiquant entre eux dans un ordinateur.
+		\item Plusieurs threads d'un processeur
 	\end{itemize}
 \end{frame}
 
 \begin{frame}
-\frametitle{Temps et ordonnancement ?}
-Soient a et b, deux évènements. On dit que\\
-\textit{a est arrivé avant b} si $a$ est arrivé plus tôt dans le temps que $b$.\\
-\textbf{Horloge réelle : }n'est pas forcément exacte et ne fournit pas le temps au sens physique précis ! \\ $\implies$ la relation \textit{est arrivé avant} doit s'exprimer sans horloge réelle.\\
+\frametitle{Temps physique}
+
+Manière intuitive d'ordonner deux événements a et b :  \\ 
+\begin{center}
+ "a est arrivé avant b si a est arrivé plus tôt dans le temps que b"
+\end{center}
+Problèmes : \\
+\bigskip
+\begin{itemize}
+\item Le temps doit être observable dans le système
+\item Le système doit donc contenir des horloges 
+\item Celles-ci ne sont pas parfaitement fiable et ne donnent pas assez précisément le temps physique
+\end{itemize}
+\bigskip
+$\implies$ la relation \textit{est arrivé avant} doit s'exprimer sans horloge réelle.
 \end{frame}
 
 \section{Ordre partiel}

@@ -84,44 +84,51 @@ $\implies$ la relation \textit{est arrivé avant} doit s'exprimer sans horloge r
 \section{Ordre partiel}
 
 \begin{frame}
-\frametitle{\'Evènements}
-Le système est composé d'une collection de processus et chaque processus est une séquence d'évènements.\\
-exemple : L'exécution d'un sous-programme ou d'une instruction sur un ordinateur peut être considéré comme un évènement.\\
-Les évènements d'un processus forment une séquence où a apparait avant b ssi a est exécuté avant b.
-\begin{figure}
-\includegraphics[scale=0.15]{process1.png}
-\end{figure}
+\frametitle{\'Evènements dans un processus}\\
+\begin{columns}
+    \begin{column}{0.2\textwidth}
+    \includegraphics[scale=0.7]{clem1.png}
+    \end{column}
+  
+    \begin{column}{0.8 \textwidth}
+    \begin{itemize}
+    \item Chaque processus est une suite d'événements
+    \item La suite d'événements forme une séquence
+    \item Dans la séquence, a se produit avant b ssi a est exécuté avant b
+    \item La séquence est totalement ordonnée
+    \item La réception et l'envoi de message sont des événements
+    \end{itemize}
+    \end{column}
+\end{columns}
 \end{frame}
+
+
 \begin{frame}
-On considère que envoyer/recevoir un message comme un évènement d'un processus.
 \begin{definition}
 La relation $\rightarrow$ sur un ensemble d'évènements d'un système satisfait
 \begin{enumerate}
-\item Si $a$ et $b$ sont des évènements du même processus et a vient avant b, alors $a \rightarrow b$.
-\item Si $a$ correspond à l'envoi d'un message par un processus et b correspond à la réception de ce message par un autre processus, alors $a \rightarrow b$.
-\item $\rightarrow$ est transitif. On dit que 2 évènements $a, b$ sont concurrents ssi $a \not\rightarrow b$ et $b \not\rightarrow a$
+\item Si $a$ et $b$ sont deux évènements du même processus et a survient avant b, alors $a \rightarrow b$
+\item Si $a$ correspond à l'envoi d'un message par un processus et b correspond à la réception de ce message par un autre processus, alors $a \rightarrow b$
+\item $\rightarrow$ est transitif
+\item Deux évènements $a, b$ sont concurrents ssi $a \not\rightarrow b$ et $b \not\rightarrow a$
 \end{enumerate}
 \end{definition}
 \end{frame}
 
 \begin{frame}
-\begin{figure}
-\includegraphics[scale=0.3]{process2.png}
-\end{figure}
-\end{frame}
-
-\begin{frame}
   \begin{columns}
-    \begin{column}{.5\textwidth}
-		\includegraphics[scale=0.15]{process2.png}
+    \begin{column}{.4\textwidth}
+		\includegraphics[scale=0.19]{process2.png}
     \end{column}
-	\begin{column}{0.5 \textwidth}
-		$a \rightarrow b$ signifie que $a$ peut aller vers $b$ sur le diagramme en avançant dans le temps le long du processus et de la ligne de message.
+	\begin{column}{0.6 \textwidth}
+\begin{center}
+$p_1 \rightarrow r_4$  par transitivité avec \\
+\bigskip
+	$p_1 \rightarrow q_2$\\$q_2 \rightarrow q_3$ \\ $q_3 \rightarrow q_4$ \\ $q_4 \rightarrow r_3$ \\ $r_3 \rightarrow r_4$\\
+\end{center}
 	\end{column}
 	\end{columns}
-	Par exemple on a $p_1 \rightarrow r_4$  par transitivité avec \\
-	$p_1 \rightarrow q_2$ et $q_2 \rightarrow q_3$ et $q_3 \rightarrow q_4$ et $q_4 \rightarrow r_3$ et $r_3 \rightarrow r_4$\\
-	\textbf{{\color{red}Problème : }}on voit par exemple que $q_3$ est concurrent avec $p3$ ; on ne sait pas si $q_3$ s'est passé avant $p_3$ et vice versa.
+	\bigskip	\textbf{{\color{red}Problème : }}$q_3$ est concurrent avec $p3$ : on ne peut pas déterminer si $q_3$ s'est passé avant $p_3$ ou vice versa.
 \end{frame}
 
 \section{Horloges Logiques}

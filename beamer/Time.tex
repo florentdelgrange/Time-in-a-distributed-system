@@ -309,4 +309,79 @@ Chaque processus exécute indépendamment un tel automate. \\
 En pratique, l'automate est plus complexe incluant des commandes avec des Timestamp $T_m$ et les commandes provenant des autres processus (ACK, request, release,...).
 \end{frame}
 
+\begin{frame}
+\frametitle{Points faibles}
+\begin{itemize}
+\item L'algorithme nécessite la participation active de tous les autres processus
+\item Un processus \textbf{doit} connaitre toutes les commandes issues des autres processus. 
+\item L'échec d'un processus peut dérégler tout le système.
+\item Sans \textbf{\color{cyan} temps physique}, il n'y a pas moyen de distinguer l'échec d'un processus d'un autre qui est juste en pause.
+\end{itemize}
+Cependant, le fait que l'algorithme classe les requêtes selon l'ordre total $\Rightarrow$ permet de détecter les comportements anormaux.
+\end{frame}
+
+% /!\ J'ai pas compris la suite Anomalous Behavior /!\
+
+\section{Horloges Physiques}
+\begin{frame}
+\frametitle{Horloges Physiques : cas continu}
+Soit $C_i(t)$, la lecture de l'horloge $C_i$ au temps physique $t$.
+\begin{itemize}
+\item On suppose que les horloges tournent en continu.
+\item On passe des cas discrets au cas continus.
+\item On suppose que $C_i(t)$ est \textit{dérivable},\\
+	sauf pour les sauts discontinus où l'horloge est réinitialisée.
+\item $\frac{\partial C_i(t)}{\partial t}$ représente le taux par rapport auquel $C_i(t)$ est synchronisé avec l'horloge physique au temps $t$.
+\item Ce taux devrait être $\approx 1$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Propriétés}
+\begin{block}{PC 1}
+$\exists \kappa \ll 1$ tel que $\forall i, |\frac{\partial C_i(t)}{\partial t} - 1| < \kappa$
+\end{block}
+exemple : \textit{horloges à cristal $\kappa \leq 10^{-6}$}
+Cette condition n'est pas assez forte : les horloges doivent être synchronisées c.à.d.
+\[\forall i, j, t \ \ C_i(t) \approx C_j(t)\]
+\begin{block}{PC 2}
+$\exists \epsilon > 0, \forall i, j \ \ |C_i(t) - C_j(t)| < \epsilon$
+\end{block}
+$\kappa$ et $\epsilon$ doivent assurer d'éviter les anomalies.\\
+\end{frame}
+
+\begin{frame}
+\frametitle{\'Eviter les comportements anormaux}
+Soient $\mu \in \mathbb{R}^{> 0}$ , $a, b$ des évènements de deux processus distincts et le temps physique $t$.\\
+\textbf{Si $a$ se produit en $t$ et que $b$ satisfait {\color{cyan}$a \rightarrow b$}, alors $b$ se produit en {\color{cyan}$t + \mu$.}}\\
+exemple : Soient $sp$, le plus court chemin entre les processus et $c$, la vitesse de la lumière. On peut prendre $\mu = \frac{sp}{c}$
+\begin{block}{Propriétés}
+On suppose également que quand l'horloge est réinitialisée, elle est toujours remise en avant et jamais en arrière. Alors, pour éviter les comportements anormaux :
+\[ C_i(t+\mu) - C_i(t) > (1 - \kappa)\mu\]
+\[ C_i(t+\mu) - C_j(t) > 0 \text{ avec } \frac{\epsilon}{1-\kappa} \leq \mu \text{ (par PC 2)} \]
+\end{block}
+\end{frame}
+
+\begin{frame}
+\frametitle{\'Eviter les comportements anormaux}
+\begin{block}{Propriétés}
+On suppose également que quand l'horloge est réinitialisée, elle est toujours remise en avant et jamais en arrière. Alors, pour éviter les comportements anormaux :
+\[ C_i(t+\mu) - C_i(t) > (1 - \kappa)\mu\]
+\[ C_i(t+\mu) - C_j(t) > 0 \text{ avec } \frac{\epsilon}{1-\kappa} \leq \mu \text{ (par PC 2)} \]
+\end{block}
+\end{frame}
+
+\begin{frame}
+\frametitle{Délai d'envoi}
+Soit $m$, un message envoyé au temps physique $t$ et reçu au temps $t'$.\\
+{\color{cyan}$v_m = t' - t$} est le \textbf{\color{cyan}délai total} du message $m$.\\
+Ce délai est non connu du processus qui reçoit $m$. On suppose par contre que tout processus recevant $m$ connait le\\ \textbf{\color{cyan} délai minimal de $m$ : } $0 \leq \mu_m \leq v_m$. \\
+\textbf{\color{cyan} délai imprévisible de $m$ : }$\xi_m = v_m - \mu_m$
+\end{frame}
+
+\begin{frame}
+\frametitle{Implémentation}
+
+\end{frame}
+
 \end{document}

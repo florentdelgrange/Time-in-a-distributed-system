@@ -239,11 +239,11 @@ Notons que les deux premières suppositions peuvent être évitées à l'aide d'
 \item Initialisation de la file : {$T_0:P_0$ [request resource]} avec $\forall i,  T_0 \leq C_{i_0}$ et $P_0$, le processus auquel la ressource est accordée à l'initialisation.
 \end{itemize}
 	\begin{columns}
-    	\begin{column}{.5\textwidth}
+    	\begin{column}{.65\textwidth}
 			$P_i$ envoie une requête à la ressource sous forme d'un message contenant $T_m : P_i$ [request resource] à tous les autres processus et place ce message sur sa file de requête où $T_m$ est le timestamp de ce message.
 		\end{column}
-		\begin{column}{.5\textwidth}
-			\includegraphics[scale=0.2]{process8.png}
+		\begin{column}{.35\textwidth}
+			\includegraphics[scale=0.13]{process8.png}
 		\end{column}
 	\end{columns}
 %\includegraphics[scale=0.1]{process9.png}\includegraphics[scale=0.1]{process10.png}\includegraphics[scale=0.1]{process11.png}
@@ -253,7 +253,7 @@ Notons que les deux premières suppositions peuvent être évitées à l'aide d'
 \frametitle{Algorithme}
 	\begin{columns}
     	\begin{column}{.65\textwidth}
-			Lorsque le processus $P_j$ reçoit le message $T_m : P_i$[request resource], celui-ci le place dans sa file de requête et envoie un acknowledgment à $P_i$.
+			Lorsque le processus $P_j$ reçoit le message $T_m : P_i$[request resource], celui-ci le place dans sa file de requête et envoie un acknowledgment à $P_i$ lorsque ce message se trouve à la tête de la file.
 		\end{column}
 		\begin{column}{.35\textwidth}
 			\includegraphics[scale=0.13]{process9.png}
@@ -271,6 +271,7 @@ Notons que les deux premières suppositions peuvent être évitées à l'aide d'
 \end{frame}
 
 \begin{frame}
+\frametitle{Algorithme}
 \begin{columns}
     	\begin{column}{.65\textwidth}
 			Lorsque le processus $P_j$ reçoit un message contenant $P_i$[release resource], il supprime chaque requête $T_m : P_i$[request resource] de sa file de requête.
@@ -282,8 +283,30 @@ Notons que les deux premières suppositions peuvent être évitées à l'aide d'
 	Finalement, la ressource est accordée au processus $P_i$ lorsque
 	\begin{itemize}
 	\item Il y a un message contenant $T_m : P_i$[request resource] dans sa file de requête qui est ordonnée avant chaque autre requête dans sa file par la relation $\Rightarrow$.
-	\item $P_i$ a reçu un message de tous les autres processus qui est daté après $T_m$.
+	\item $P_i$ a reçu un message (ACK) de tous les autres processus qui est daté après $T_m$.
 	\end{itemize}
+	{\color{cyan} Chaque processus} suit ces règles indépendamment $\implies$ pas de processus de synchro et de stockage central.
+\end{frame}
+
+\begin{frame}
+\frametitle{Généralisation}
+\textbf{\color{cyan} But : }implémenter la synchronisation dans de tels systèmes distribués.\\
+\begin{block}{Automate $SM(S, C, \delta)$}
+\begin{itemize}
+\item $S$ ensemble des états possibles. \\Un état $s$ correspond à une file de requêtes où la requête à la tête de la file est actuellement accordée.
+\item $C$ ensemble des commandes possibles. \\Correspond aux commandes $P_i $ [request resource] et $P_i$ [release resource].
+\item $\delta : S \times C \rightarrow S$ tel que $\forall s \in S, c \in C, \delta(s, c) = s'$ si il est possible d'exécuter la commande $c$ en $s$
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\frametitle{Simple Exemple}
+\begin{figure}
+	\includegraphics[scale=0.2]{state_machine.png}
+\end{figure}
+Chaque processus exécute indépendamment un tel automate. \\
+En pratique, l'automate est plus complexe incluant des commandes avec des Timestamp $T_m$ et les commandes provenant des autres processus (ACK, request, release,...).
 \end{frame}
 
 \end{document}

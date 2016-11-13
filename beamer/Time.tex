@@ -203,7 +203,7 @@ Alors après $a$, $C_i \leftarrow C_i + 1$.
 	\begin{block}{Condition forte}
 	\begin{enumerate}[(a)]
 		\item Si un évènement $a$ est l'envoi d'un message $m$ par le processus $P_i$, alors le message $m$ contient un Timestamp $T_m \leftarrow C_i$<$a$>
-		\item Lorsqu'il reçoit un message $m$, le processus $P_j$ assigne la valeur $\mu$ son compteur $C_j$ tel que $\mu > T_m$ et $\mu \geq$ valeur de $C_j$ avant la réception de $m$
+		\item Lorsqu'il reçoit un message $m$, le processus $P_j$ assigne la valeur $\mu$ à son compteur $C_j$ tel que $\mu > T_m$ et $\mu \geq$ valeur de $C_j$ avant la réception de $m$
 	\end{enumerate}
 	\end{block}
 	\bigskip
@@ -213,8 +213,7 @@ Alors après $a$, $C_i \leftarrow C_i + 1$.
 \section{\'Evènements totalement ordonnés}
 \begin{frame}
 \frametitle{Ordre total}
-On souhaite avoir un système d'horloge qui satisfait les conditions d'horloge précédemment énoncées et qui met en place un \textit{\textbf{ordre total}}.\\
-\textbf{Rappel : }
+On souhaite avoir un système d'horloge qui satisfait les conditions d'horloge précédemment énoncées et qui met en place un \textit{\textbf{ordre total}}.\\ \bigskip
 \begin{block}{Ordre Total}
 Une \textbf{relation binaire} $\preceq$ sur un ensemble E est un ordre total si $\forall x, y, z \in E$, \\
 \begin{itemize}
@@ -227,64 +226,86 @@ Une \textbf{relation binaire} $\preceq$ sur un ensemble E est un ordre total si 
 
 \begin{frame}
 \frametitle{Ordre Total}
-Soit $\preceq$, un ordre total arbitraire sur l'ensemble des processus. On définit la relation $\Rightarrow$ comme suit :\\
+Soit $\prec$ un ordre total arbitraire (utilisé en cas d'égalité)\\ \bigskip
+On définit la relation $\Rightarrow$ comme suit :\\
+\begin{center}
 Si $a \in P_i$ et $b \in P_j$, alors \\
 \[
 	a \Rightarrow b \ \ \text{ssi}
 	\begin{cases}
 		C_i \text{<}a\text{>} < C_j\text{<}b\text{>} \\
 		\text{ou}\\
-		C_i\text{<}a\text{>} = C_j\text{<}b\text{>} \text{ et } P_i \preceq P_j
+		C_i\text{<}a\text{>} = C_j\text{<}b\text{>} \text{ et } P_i \prec P_j
 	\end{cases}
 \]
-Avec une telle définition, on a bien que si $a \rightarrow b$, alors $a \Rightarrow b$. (L'ordre partiel est étendu à un ordre total)
-\vspace{.5in}
-
-\^Etre capable d'ordonner totalement les évènements peut être très utile dans l'implémentation d'un système distribué. C'est le but d'un système à horloges logiques.
+\end{center}
+La relation $\Rightarrow$ est un ordre total (elle étend la relation  $\rightarrow$ )\\
+\bigskip
+Il est important de pouvoir ordonner totalement les événements dans un système distribué pour en assurer le bon fonctionnement.
 \end{frame}
 
 \begin{frame}
 \frametitle{Partage de ressource}
-On considère à présent un système composé d'un ensemble fini de processus qui partagent une ressource unique. On veut que les processus se synchronisent et évitent les conflits.
+\begin{itemize}
+\item Considérons un système composé d'un ensemble fini de processus qui partagent une ressource unique.
+\item On veut que les processus se synchronisent et évitent les conflits.
+\end{itemize}
 \begin{block}{Propriétés}
 \begin{enumerate}
-\item Un processus qui monopolise une ressource doit l'avoir libérée avant d'en monopoliser une autre
-\item Les requêtes pour les ressources doivent être accordées dans l'ordre dans lesquelles elles ont été demandées
-\item Si chaque processus qui détient une ressource la libère, alors on a que chaque requête sera accordée à un moment donné
+\item Le processus qui utilise la ressource doit la libérer avant que celle-ci puisse être utilisée par un autre processus
+\item Plusieurs demandes différentes pour la ressource doivent être accordées dans l'ordre dans lesquelles elles ont été faites
+\item Si chaque processus qui détient la ressource à un moment donné la libère, alors chaque requête sera accordée à un moment donné
 \end{enumerate}
 \end{block}
 \end{frame}
 
 \begin{frame}
-Un système d'horloge centrale qui alloue des requêtes dans l'ordre dont elles sont reçues ne fonctionnera pas.\\
-Soient $P_0, P_1, P_2$, des processus. On suppose que $P_1$ envoie une requête à $P_0$ et envoie ensuite
-un message à $P_2$. Lorsque $P_2$ reçoit le message, $P_2$ envoie une requête à $P_0$. Il est possible que la requête de $P_2$ atteigne $P_0$ avant la requête de $P_1$.
-\begin{figure}\includegraphics[scale=0.12]{process4.png}\end{figure}
-La 2e condition de ce système est donc violée si la requête de $P_2$ est accordée en premier.
+\frametitle{Horloge centrale}
+\textbf{{\color{red}Problème : }} Un système d'horloge centrale qui alloue la ressource en fonction des requêtes qu'elle reçoit ne respecte pas les conditions.\\\bigskip
+
+\begin{columns}
+    \begin{column}{.4\textwidth}
+		\includegraphics[scale=0.55]{process4.png}
+    \end{column}
+	\begin{column}{0.6 \textwidth}
+	\begin{itemize}
+	\item 	$p_2$ envoie sa demande de ressource à $p_0$\\
+	\item  	$p_2$ envoie ensuite un message à $p_1$\\
+	\item 	suite à la réception du message, $p_1$ fait aussi une demande de la ressource à $p_0$\\
+	\item Il est possible que la demande de $p_1$ arrive à $p_0$ avant celle de $p_2$.
+	\end{itemize}
+ \bigskip Les requêtes ne seront pas accordées selon l'ordre dans lequel elles ont été faites !
+	\end{column}
+	\end{columns}
 \end{frame}
 
 \begin{frame}
-Pour éviter ce problème : système d'horloge avec les règles {\color{cyan} IR 1} et {\color{cyan} IR 2} pour avoir un ordre total $\Rightarrow$ sur les évènements. On y rajoute les suppositions suivantes :
+Nous allons introduire un système d'horloges avec les règles faibles et fortes énoncées précédemment pour avoir un ordre total $\Rightarrow$ sur les évènements.\\ \bigskip
+Afin de simplifier le problème nous ferons les suppositions suivantes : \\ \bigskip
 \begin{enumerate}
-\item On suppose que pour tout processus $P_i$ et $P_j$, les messages envoyés de $P_i$ à $P_j$ sont reçus dans le même ordre qu'ils sont envoyés. \begin{figure}\includegraphics[scale=0.06]{process5.png}\includegraphics[scale=0.06]{process6.png}\end{figure}
-\item On suppose que chaque message envoyé finit toujours par être reçu. \begin{figure}\includegraphics[scale=0.06]{process7.png}\end{figure}
+\item On suppose que pour tout processus $P_i$ et $P_j$, les messages envoyés de $P_i$ à $P_j$ sont reçus dans le même ordre qu'ils sont envoyés. 
+\item On suppose que chaque message envoyé finit toujours par être reçu.
 \item On suppose qu'un processus peut envoyer des messages vers tout autre processus.
 \end{enumerate}
-Notons que les deux premières suppositions peuvent être évitées à l'aide d'un \textit{protocole d'acknowledgment} ou par numérotation des messages.
+Notons que les deux premières suppositions peuvent être évitées en utilisant des numéros de messages et un protocole d'accusé de réception.
 \end{frame}
 
 \begin{frame}
 \frametitle{Algorithme}
 \begin{itemize}
 \item Tout processus maintient une file de requête (file de priorité) invisible à tout autre processus.
-\item Initialisation de la file : {$T_0:P_0$ [request resource]} avec $\forall i,  T_0 \leq C_{i_0}$ et $P_0$, le processus auquel la ressource est accordée à l'initialisation.
+\item Une demande de ressource par le processus $p_i$ est de la forme $T_m:P_i$ où $T_m$ est le timestamp du message de requête.
+\item Initialisation de la file : {$T_0:P_0$} avec $\forall i,  T_0 \leq C_{i_0}$ et $P_0$, le processus auquel la ressource est accordée à l'initialisation.
 \end{itemize}
 	\begin{columns}
-    	\begin{column}{.65\textwidth}
-			$P_i$ envoie une requête à la ressource sous forme d'un message contenant $T_m : P_i$ [request resource] à tous les autres processus et place ce message sur sa file de requête où $T_m$ est le timestamp de ce message.
+    	\begin{column}{.5\textwidth}
+			Pour demander la ressource, $P_i$ envoie un message de demande $T_m : P_i$ à tous les autres processus et place ce message sur sa file de requête
 		\end{column}
-		\begin{column}{.35\textwidth}
-			\includegraphics[scale=0.13]{process8.png}
+		\begin{column}{.5\textwidth}
+		\begin{center}
+		\includegraphics[scale=0.6]{process8.png}
+		\end{center}
+		
 		\end{column}
 	\end{columns}
 %\includegraphics[scale=0.1]{process9.png}\includegraphics[scale=0.1]{process10.png}\includegraphics[scale=0.1]{process11.png}
@@ -293,20 +314,24 @@ Notons que les deux premières suppositions peuvent être évitées à l'aide d'
 \begin{frame}
 \frametitle{Algorithme}
 	\begin{columns}
-    	\begin{column}{.65\textwidth}
-			Lorsque le processus $P_j$ reçoit le message $T_m : P_i$[request resource], celui-ci le place dans sa file de requête et envoie un acknowledgment à $P_i$ lorsque ce message se trouve à la tête de la file.
+    	\begin{column}{.6\textwidth}
+			Lorsque le processus $P_j$ reçoit le message $T_m : P_i$, il le place dans sa file de requête et envoie un accusé de réception à $P_i$
 		\end{column}
-		\begin{column}{.35\textwidth}
-			\includegraphics[scale=0.13]{process9.png}
+		\begin{column}{.4\textwidth}
+		\begin{center}
+				\includegraphics[scale=0.5]{process9.png}
+		\end{center}
 		\end{column}
 	\end{columns}
 	
 		\begin{columns}
-    	\begin{column}{.65\textwidth}
-			Pour libérer la ressource, le processus $P_i$ supprime tout $T_m : P_i$[request resource] de sa file de requête et envoie un $P_i$[release resource] sous forme de message à chaque autre processus.
+    	\begin{column}{.6\textwidth}
+			Pour libérer la ressource, le processus $P_i$ supprime tout $T_m : P_i$ de sa file de requête et envoie un message $P_i$ qui notifie la libération de la ressource à chaque autre processus.
 		\end{column}
-		\begin{column}{.35\textwidth}
-			\includegraphics[scale=0.13]{process10.png}
+		\begin{column}{.4\textwidth}
+		\begin{center}
+				\includegraphics[scale=0.5]{process10.png}
+		\end{center}
 		\end{column}
 	\end{columns}
 \end{frame}
@@ -314,29 +339,33 @@ Notons que les deux premières suppositions peuvent être évitées à l'aide d'
 \begin{frame}
 \frametitle{Algorithme}
 \begin{columns}
-    	\begin{column}{.65\textwidth}
-			Lorsque le processus $P_j$ reçoit un message contenant $P_i$[release resource], il supprime chaque requête $T_m : P_i$[request resource] de sa file de requête.
+    	\begin{column}{.6\textwidth}
+			Lorsque le processus $P_j$ reçoit un message de libération de ressource $P_i$, il supprime chaque requête $T_m : P_i$ de sa file de requête.
 		\end{column}
-		\begin{column}{.35\textwidth}
-			\includegraphics[scale=0.13]{process11.png}
+		\begin{column}{.4\textwidth}
+		\begin{center}
+		\includegraphics[scale=0.5]{process11.png}
+		\end{center}
+	
 		\end{column}
 	\end{columns}
-	Finalement, la ressource est accordée au processus $P_i$ lorsque
+	\bigskip
+	Finalement, la ressource est accordée au processus $P_i$ lorsque \bigskip
 	\begin{itemize}
-	\item Il y a un message contenant $T_m : P_i$[request resource] dans sa file de requête qui est ordonnée avant chaque autre requête dans sa file par la relation $\Rightarrow$.
-	\item $P_i$ a reçu un message (ACK) de tous les autres processus qui est daté après $T_m$.
+	\item Il y a un message contenant $T_m : P_i$ dans sa file de requête qui est ordonnée avant chaque autre requête dans sa file par la relation $\Rightarrow$.
+	\item $P_i$ a reçu un message de tous les autres processus daté après $T_m$.
 	\end{itemize}
-	{\color{cyan} Chaque processus} suit ces règles indépendamment $\implies$ pas de processus de synchro et de stockage central.
+	\bigskip
+	{\color{cyan} Chaque processus} suit ces règles indépendamment donc on a pas de processus de synchronisation central.
 \end{frame}
 
 \begin{frame}
-\frametitle{Généralisation}
-\textbf{\color{cyan} But : }implémenter la synchronisation dans de tels systèmes distribués.\\
-\begin{block}{Automate $SM(S, C, \delta)$}
+\frametitle{Machine à états}
+\begin{block}{Machine à états $SM(S, C, \delta)$}
 \begin{itemize}
 \item $S$ ensemble des états possibles. \\Un état $s$ correspond à une file de requêtes où la requête à la tête de la file est actuellement accordée.
-\item $C$ ensemble des commandes possibles. \\Correspond aux commandes $P_i $ [request resource] et $P_i$ [release resource].
-\item $\delta : S \times C \rightarrow S$ tel que $\forall s \in S, c \in C, \delta(s, c) = s'$ si il est possible d'exécuter la commande $c$ en $s$
+\item $C$ ensemble des commandes possibles. \\Correspond aux commandes $P_i $ de demande ou de libération de ressource.
+\item $\delta : C \times S \rightarrow S$ une fonction de transition telle que $\delta(c, s) = s'$ indique qu'exécuter l'action $c$ quand la machine est en l'état $s$ amène celle-ci en l'état $s'$.
 \end{itemize}
 \end{block}
 \end{frame}
@@ -354,9 +383,9 @@ En pratique, l'automate est plus complexe incluant des commandes avec des Timest
 \frametitle{Points faibles}
 \begin{itemize}
 \item L'algorithme nécessite la participation active de tous les autres processus
-\item Un processus \textbf{doit} connaitre toutes les commandes issues des autres processus. 
+\item Un processus \textbf{doit} connaître toutes les commandes issues des autres processus. 
 \item L'échec d'un processus peut dérégler tout le système.
-\item Sans \textbf{\color{cyan} temps physique}, il n'y a pas moyen de distinguer l'échec d'un processus d'un autre qui est juste en pause.
+\item Sans \textbf{\color{cyan} temps physique}, il n'y a pas moyen de distinguer l'échec d'un processus. La seule manière de détecter cet échec est un timeout, qui nécessite l'utilisation de temps physique.
 \end{itemize}
 Cependant, le fait que l'algorithme classe les requêtes selon l'ordre total $\Rightarrow$ permet de détecter les comportements anormaux.
 \end{frame}

@@ -84,7 +84,7 @@ $\implies$ la relation \textit{est arrivé avant} doit s'exprimer sans horloge r
 \section{Ordre partiel}
 
 \begin{frame}
-\frametitle{\'Evènements dans un processus}\\
+\frametitle{\'Evènements dans un processus}
 \begin{columns}
     \begin{column}{0.2\textwidth}
     \includegraphics[scale=0.7]{clem1.png}
@@ -135,10 +135,10 @@ $p_1 \rightarrow r_4$  par transitivité avec \\
 
 \begin{frame}
 \frametitle{Horloges logiques}
-Une horloge est juste une façon d'assigner un numéro à un évènement où le numéro correspond au temps où l'évènement s'est produit.\\
-$\implies$ Chaque processus $p_i$ est associé à une horloge $C_i$.\\
-$\implies$ Pour tout évènement $a$ se produisant dans $P_i$, on assigne un nombre $C_i$<$a$> \\
-Le système entier est donc représenté par la fonction $C$.\\
+Une horloge est une façon d'assigner un nombre à un évènement où le nombre correspond au temps où l'évènement s'est produit.\\\bigskip
+$\implies$ Chaque processus $p_i$ possède une horloge $C_i$.\\
+$\implies$ Une horloge $C_i$ est une fonction qui associe un nombre $C_i$<$a$>  à chaque événement $a$ dans $P_i$\\
+$\implies$ Le système entier est représenté par la fonction $C$.
 \begin{block}{Propriétés}
 \begin{itemize}
 \item Soit b, un évènement, $C$<$b$>$ = C_j$<$b$> ssi $b$ est un évènement du processus $P_j$.\\
@@ -152,7 +152,25 @@ Le système entier est donc représenté par la fonction $C$.\\
 \begin{block}{Condition faible}
 $a \rightarrow b \implies C$<$a$> $ < C$<$b$>
 \end{block}
-Cela implique que 2 évènements concurrents doivent se produire en même temps. Sur la figure, on a que $p_2$ et $p_3$ sont concurrents de $q_3$. Donc on devrait avoir que $p_2 = p_3 = q_3$ et cela contredit le fait que $p_2 < p_3$.
+\bigskip
+Soient $a, b$ deux événements concurrents. \\On a $a \not\rightarrow b$  et $a \not\rightarrow b$ donc\\
+\begin{center}
+$C$<$a$>  $\geq$ $C$<$b$> $\land$ $C$<$a$>  $\leq$ $C$<$b$>  $\implies$ $C$<$a$> = $C$<$b$>
+\end{center}
+Les événements $a$ et $b$ doivent être simultanés !
+\end{frame}
+\begin{frame}
+
+\begin{columns}
+    \begin{column}{.35\textwidth}
+		\includegraphics[scale=0.15]{process2.png}
+    \end{column}
+	\begin{column}{0.65 \textwidth}
+\textbf{{\color{red}Problème : }}$p_2$ et $p_3$ sont concurrents de $q_3$. Donc $C$<$p_2$> = $C$<$p_3$> = $C$<$q_3$>. \\
+Mais $p_2 \rightarrow p_3$ donc $C$<$p_2$> $<$ $C$<$p_3$>\\ \bigskip
+$\implies$ Besoin de conditions plus fortes
+	\end{column}
+	\end{columns}
 \begin{block}{Conditions fortes}
 \begin{enumerate}
 \item Si $a$ et $b$ sont des évènements de $P_i$ et que $a$ vient avant $b$, alors $C_i$<$a$> $<$ $C_i$<$b$>
@@ -173,23 +191,23 @@ Cela implique que 2 évènements concurrents doivent se produire en même temps.
 
 \begin{frame}
 \frametitle{Implémentation}
-On veut garantir que la {\color{cyan} condition 1} soit respectée. Il suffit que $C_i$ se plie à la règle d'implémentation suivante : 
-\begin{block}{IR 1}
-Chaque processus $P_i$ incrémente $C_i$ entre 2 évènements successifs.\\
-Soient $a$, $b$, deux évènements successifs de $P_i$. Alors, $C_i \leftarrow C_i + 1$.
+\begin{block}{Condition faible}
+Chaque processus $P_i$ incrémente le compteur $C_i$ entre 2 évènements successifs.\\
+Soient $a$ et $b$, deux évènements successifs de $P_i$. \\
+Alors après $a$, $C_i \leftarrow C_i + 1$.
 \end{block}
 \end{frame}
 
 \begin{frame}
 	\frametitle{Implémentation}
-	Pour garantir la {\color{cyan} condition 2}, il faut que chaque message $m$ contienne un TimeStamp $T_m$ qui est égal au temps $t$ où le message a été émis. \\
-	\textbf{But : }Lorsqu'un message $m$ est reçu, un processus avance son horloge de telle sorte à ce que celle-ci soit $>$ à $T_m$
-	\begin{block}{IR 2}
+	\begin{block}{Condition forte}
 	\begin{enumerate}[(a)]
 		\item Si un évènement $a$ est l'envoi d'un message $m$ par le processus $P_i$, alors le message $m$ contient un Timestamp $T_m \leftarrow C_i$<$a$>
-		\item Lorsqu'il reçoit un message $m$, le processus $P_j$ met à jour la variable $C_j$ tel que $C_j > T_m$ et $C_j \geq$ valeur courante de $C_j$
+		\item Lorsqu'il reçoit un message $m$, le processus $P_j$ assigne la valeur $\mu$ son compteur $C_j$ tel que $\mu > T_m$ et $\mu \geq$ valeur de $C_j$ avant la réception de $m$
 	\end{enumerate}
 	\end{block}
+	\bigskip
+	L'utilisation d'un Timestamp permet au processus qui reçoit un message de mettre à jour son compteur pour que que celui-ci respecte bien la condition faible (ordre dans ce même processus) et forte (ordre entre les processus).
 \end{frame}
 
 \section{\'Evènements totalement ordonnés}

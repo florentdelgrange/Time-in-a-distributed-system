@@ -87,7 +87,7 @@ $\implies$ la relation \textit{est arrivé avant} doit s'exprimer sans horloge r
 \frametitle{\'Evènements dans un processus}
 \begin{columns}
     \begin{column}{0.2\textwidth}
-    \includegraphics[scale=0.7]{clem1.png}
+    %\includegraphics[scale=0.7]{clem1.png}
     \end{column}
   
     \begin{column}{0.8 \textwidth}
@@ -415,7 +415,7 @@ exemple : \textit{horloges à cristal $\kappa \leq 10^{-6}$}
 Cette condition n'est pas assez forte : les horloges doivent être synchronisées c.à.d.
 \[\forall i, j, t \ \ C_i(t) \approx C_j(t)\]
 \begin{block}{PC 2}
-$\exists \epsilon > 0, \forall i, j \ \ |C_i(t) - C_j(t)| < \epsilon$
+$\exists \epsilon \ll 1, \forall i, j \ \ |C_i(t) - C_j(t)| < \epsilon$
 \end{block}
 $\kappa$ et $\epsilon$ doivent assurer d'éviter les anomalies.\\
 \end{frame}
@@ -451,7 +451,48 @@ Ce délai est non connu du processus qui reçoit $m$. On suppose par contre que 
 
 \begin{frame}
 \frametitle{Implémentation}
+\begin{block}{IR 1'}
+$\forall i$, si $P_i$ ne reçoit pas un message au temps physique $t$, alors $C_i$ est dérivable en t et $\partial_t C_i (t) > 0$
+\end{block}
 
+\begin{block}{IR 2'}
+\begin{enumerate}[(a)]
+\item Si $P_i$ envoie un message $m$ au temps physique $t$, alors $m$ contient un timestamp $T_m \leftarrow C_i(t)$.
+\item Lorsqu'on reçoit un message $m$ au temps $t'$, le processus $P_j$ met à jour $C_j(t')$ : 
+\[C_j(t') = \max (C_j(t'-0), T_m + \mu_m)\]\[\text{où } C_j(t'-0) = \lim_{\delta \rightarrow 0} C_j(t' - |\delta|)\]
+\end{enumerate}
+\end{block}
+
+\end{frame}
+% Préviens si tu captes la fin, j'y comprends pas grand chose. Je tente quand même ma chance .
+
+\begin{frame}
+\frametitle{PC2 satisfait ?}
+On veut à présent montrer que \textbf{\color{cyan}PC2 est satisfait}.\\
+On suppose que le système de processus est modélisé par un graphe :
+\begin{figure}
+	\includegraphics[scale=0.2]{process_graph.png}
+\end{figure}
+\begin{itemize}
+\item Un message est envoyé sur cet arc toutes les $\tau$ secondes si $\forall t$, $P_i$ envoie au moins un message vers $P_j$ entre $t$ et $t+\tau$.
+\item \textbf{\color{cyan}Diamètre $d$ du graphe} : le plus petit $d$ tel que pour toute paire $(P_i, P_j), \exists$ un chemin de $P_j$ à $P_k$ d'au moins $d$ arcs.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{PC2 satisfait ?}
+\begin{itemize}
+\item On suppose donc que le graphe est \textbf{fortement connexe} et de \textbf{diamètre} $d$.
+\item Le graphe obéi aux règle d'implémentation IR 1' et IR2'.
+\item $\forall$ message $m$, $\mu_m \leq \mu$ pour une constante $\mu$ et $\forall t \geq t_0$.
+	\begin{enumerate}[(a)]
+	\item PC1 est respecté.
+	\item $\exists \tau, \xi$ tels que toutes les $\tau$ secondes, un message avec un délai imprévisible plus petit que $\xi$ est envoyé sur chaque arc.
+	\end{enumerate}
+	Alors, PC2 est satisfait avec 
+	\[\epsilon \approx d(2 \kappa \tau + \xi) \forall t \geq t_0+\tau d\]
+	où l'approximation est $\mu + \xi \ll \tau$.
+\end{itemize}
 \end{frame}
 
 \end{document}

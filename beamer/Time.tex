@@ -401,7 +401,7 @@ Soit $C_i(t)$, la lecture de l'horloge $C_i$ au temps physique $t$.
 \item On passe des cas discrets au cas continus.
 \item On suppose que $C_i(t)$ est \textit{dérivable},\\
 	sauf pour les sauts discontinus où l'horloge est réinitialisée.
-\item $\frac{\partial C_i(t)}{\partial t}$ représente le taux par rapport auquel $C_i(t)$ est synchronisé avec l'horloge physique au temps $t$.
+\item $\frac{\partial C_i(t)}{\partial t}$ représente la vitesse à laquelle l'horloge $C_i(t)$ fonctionne au temps $t$.
 \item Ce taux devrait être $\approx 1$.
 \end{itemize}
 \end{frame}
@@ -412,7 +412,7 @@ Soit $C_i(t)$, la lecture de l'horloge $C_i$ au temps physique $t$.
 $\exists \kappa \ll 1$ tel que $\forall i, |\frac{\partial C_i(t)}{\partial t} - 1| < \kappa$
 \end{block}
 exemple : \textit{horloges à cristal $\kappa \leq 10^{-6}$}
-Cette condition n'est pas assez forte : les horloges doivent être synchronisées c.à.d.
+Cette condition n'est pas assez forte : les horloges doivent être synchronisées entre elles c.à.d.
 \[\forall i, j, t \ \ C_i(t) \approx C_j(t)\]
 \begin{block}{PC 2}
 $\exists \epsilon \ll 1, \forall i, j \ \ |C_i(t) - C_j(t)| < \epsilon$
@@ -423,17 +423,8 @@ $\kappa$ et $\epsilon$ doivent assurer d'éviter les anomalies.\\
 \begin{frame}
 \frametitle{\'Eviter les comportements anormaux}
 Soient $\mu \in \mathbb{R}^{> 0}$ , $a, b$ des évènements de deux processus distincts et le temps physique $t$.\\
-\textbf{Si $a$ se produit en $t$ et que $b$ satisfait {\color{cyan}$a \rightarrow b$}, alors $b$ se produit en {\color{cyan}$t + \mu$.}}\\
+\textbf{Si $a$ se produit en $t$ et que $b$ satisfait {\color{cyan}$a \rightarrow b$}, alors $b$ se produit après {\color{cyan}$t + \mu$}}, $\mu$ est le plus petit temps de transmission entre deux processus.\\
 exemple : Soient $sp$, le plus court chemin entre les processus et $c$, la vitesse de la lumière. On peut prendre $\mu = \frac{sp}{c}$
-\begin{block}{Propriétés}
-On suppose également que quand l'horloge est réinitialisée, elle est toujours remise en avant et jamais en arrière. Alors, pour éviter les comportements anormaux :
-\[ C_i(t+\mu) - C_i(t) > (1 - \kappa)\mu\]
-\[ C_i(t+\mu) - C_j(t) > 0 \text{ avec } \frac{\epsilon}{1-\kappa} \leq \mu \text{ (par PC 2)} \]
-\end{block}
-\end{frame}
-
-\begin{frame}
-\frametitle{\'Eviter les comportements anormaux}
 \begin{block}{Propriétés}
 On suppose également que quand l'horloge est réinitialisée, elle est toujours remise en avant et jamais en arrière. Alors, pour éviter les comportements anormaux :
 \[ C_i(t+\mu) - C_i(t) > (1 - \kappa)\mu\]

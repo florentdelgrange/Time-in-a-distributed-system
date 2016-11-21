@@ -191,7 +191,9 @@ $\implies$ Besoin de conditions plus fortes
 
 \begin{frame}
 \frametitle{Implémentation}
-\begin{block}{Condition faible}
+Une implémentation possible est décrite par les  
+\textbf{\color{cyan}règles d'implémentations }suivantes : \bigskip
+\begin{block}{RI 1} 
 Chaque processus $P_i$ incrémente le compteur $C_i$ entre 2 évènements successifs.\\
 Soient $a$ et $b$, deux évènements successifs de $P_i$. \\
 Alors après $a$, $C_i \leftarrow C_i + 1$.
@@ -200,14 +202,14 @@ Alors après $a$, $C_i \leftarrow C_i + 1$.
 
 \begin{frame}
 	\frametitle{Implémentation}
-	\begin{block}{Condition forte}
+	\begin{block}{RI 2}
 	\begin{enumerate}[(a)]
 		\item Si un évènement $a$ est l'envoi d'un message $m$ par le processus $P_i$, alors le message $m$ contient un Timestamp $T_m \leftarrow C_i$<$a$>
 		\item Lorsqu'il reçoit un message $m$, le processus $P_j$ assigne la valeur $\mu$ à son compteur $C_j$ tel que $\mu > T_m$ et $\mu \geq$ valeur de $C_j$ avant la réception de $m$
 	\end{enumerate}
 	\end{block}
 	\bigskip
-	L'utilisation d'un Timestamp permet au processus qui reçoit un message de mettre à jour son compteur pour que que celui-ci respecte bien la condition faible (ordre dans ce même processus) et forte (ordre entre les processus).
+	L'utilisation d'un Timestamp permet au processus qui reçoit un message de mettre à jour son compteur pour que que celui-ci respecte bien RI 1 (ordre dans ce même processus) et RI 2 (ordre entre les processus).
 \end{frame}
 
 \section{\'Evènements totalement ordonnés}
@@ -245,7 +247,7 @@ Il est important de pouvoir ordonner totalement les événements dans un systèm
 \end{frame}
 
 \begin{frame}
-\frametitle{Partage de ressource}
+\frametitle{Application : partage de ressource}
 \begin{itemize}
 \item Considérons un système composé d'un ensemble fini de processus qui partagent une ressource unique.
 \item On veut que les processus se synchronisent et évitent les conflits.
@@ -392,98 +394,98 @@ Cependant, le fait que l'algorithme classe les requêtes selon l'ordre total $\R
 
 % /!\ J'ai pas compris la suite Anomalous Behavior /!\
 
-\section{Horloges Physiques}
-\begin{frame}
-\frametitle{Horloges Physiques : cas continu}
-Soit $C_i(t)$, la lecture de l'horloge $C_i$ au temps physique $t$.
-\begin{itemize}
-\item On suppose que les horloges tournent en continu.
-\item On passe des cas discrets au cas continus.
-\item On suppose que $C_i(t)$ est \textit{dérivable},\\
-	sauf pour les sauts discontinus où l'horloge est réinitialisée.
-\item $\frac{\partial C_i(t)}{\partial t}$ représente la vitesse à laquelle l'horloge $C_i(t)$ fonctionne au temps $t$.
-\item Ce taux devrait être $\approx 1$.
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{Propriétés}
-\begin{block}{PC 1}
-$\exists \kappa \ll 1$ tel que $\forall i, |\frac{\partial C_i(t)}{\partial t} - 1| < \kappa$
-\end{block}
-exemple : \textit{horloges à cristal $\kappa \leq 10^{-6}$}
-Cette condition n'est pas assez forte : les horloges doivent être synchronisées entre elles c.à.d.
-\[\forall i, j, t \ \ C_i(t) \approx C_j(t)\]
-\begin{block}{PC 2}
-$\exists \epsilon \ll 1, \forall i, j \ \ |C_i(t) - C_j(t)| < \epsilon$
-\end{block}
-$\kappa$ et $\epsilon$ doivent assurer d'éviter les anomalies.\\
-\end{frame}
-
-\begin{frame}
-\frametitle{\'Eviter les comportements anormaux}
-Soient $\mu \in \mathbb{R}^{> 0}$ , $a, b$ des évènements de deux processus distincts et le temps physique $t$.\\
-\textbf{Si $a$ se produit en $t$ et que $b$ satisfait {\color{cyan}$a \rightarrow b$}, alors $b$ se produit après {\color{cyan}$t + \mu$}}, $\mu$ est le plus petit temps de transmission entre deux processus.\\
-exemple : Soient $sp$, le plus court chemin entre les processus et $c$, la vitesse de la lumière. On peut prendre $\mu = \frac{sp}{c}$
-\begin{block}{Propriétés}
-On suppose également que quand l'horloge est réinitialisée, elle est toujours remise en avant et jamais en arrière. Alors, pour éviter les comportements anormaux :
-\[ C_i(t+\mu) - C_i(t) > (1 - \kappa)\mu\]
-\[ C_i(t+\mu) - C_j(t) > 0 \text{ avec } \frac{\epsilon}{1-\kappa} \leq \mu \text{ (par PC 2)} \]
-\end{block}
-\end{frame}
-
-\begin{frame}
-\frametitle{Délai d'envoi}
-Soit $m$, un message envoyé au temps physique $t$ et reçu au temps $t'$.\\
-{\color{cyan}$v_m = t' - t$} est le \textbf{\color{cyan}délai total} du message $m$.\\
-Ce délai est non connu du processus qui reçoit $m$. On suppose par contre que tout processus recevant $m$ connait le\\ \textbf{\color{cyan} délai minimal de $m$ : } $0 \leq \mu_m \leq v_m$. \\
-\textbf{\color{cyan} délai imprévisible de $m$ : }$\xi_m = v_m - \mu_m$
-\end{frame}
-
-\begin{frame}
-\frametitle{Implémentation}
-\begin{block}{IR 1'}
-$\forall i$, si $P_i$ ne reçoit pas un message au temps physique $t$, alors $C_i$ est dérivable en t et $\partial_t C_i (t) > 0$
-\end{block}
-
-\begin{block}{IR 2'}
-\begin{enumerate}[(a)]
-\item Si $P_i$ envoie un message $m$ au temps physique $t$, alors $m$ contient un timestamp $T_m \leftarrow C_i(t)$.
-\item Lorsqu'on reçoit un message $m$ au temps $t'$, le processus $P_j$ met à jour $C_j(t')$ : 
-\[C_j(t') = \max (C_j(t'-0), T_m + \mu_m)\]\[\text{où } C_j(t'-0) = \lim_{\delta \rightarrow 0} C_j(t' - |\delta|)\]
-\end{enumerate}
-\end{block}
-
-\end{frame}
-% Préviens si tu captes la fin, j'y comprends pas grand chose. Je tente quand même ma chance .
-
-\begin{frame}
-\frametitle{PC2 satisfait ?}
-On veut à présent montrer que \textbf{\color{cyan}PC2 est satisfait}.\\
-On suppose que le système de processus est modélisé par un graphe :
-\begin{figure}
-	\includegraphics[scale=0.2]{process_graph.png}
-\end{figure}
-\begin{itemize}
-\item Un message est envoyé sur cet arc toutes les $\tau$ secondes si $\forall t$, $P_i$ envoie au moins un message vers $P_j$ entre $t$ et $t+\tau$.
-\item \textbf{\color{cyan}Diamètre $d$ du graphe} : le plus petit $d$ tel que pour toute paire $(P_i, P_j), \exists$ un chemin de $P_j$ à $P_k$ d'au moins $d$ arcs.
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{PC2 satisfait ?}
-\begin{itemize}
-\item On suppose donc que le graphe est \textbf{fortement connexe} et de \textbf{diamètre} $d$.
-\item Le graphe obéi aux règle d'implémentation IR 1' et IR2'.
-\item $\forall$ message $m$, $\mu_m \leq \mu$ pour une constante $\mu$ et $\forall t \geq t_0$.
-	\begin{enumerate}[(a)]
-	\item PC1 est respecté.
-	\item $\exists \tau, \xi$ tels que toutes les $\tau$ secondes, un message avec un délai imprévisible plus petit que $\xi$ est envoyé sur chaque arc.
-	\end{enumerate}
-	Alors, PC2 est satisfait avec 
-	\[\epsilon \approx d(2 \kappa \tau + \xi) \forall t \geq t_0+\tau d\]
-	où l'approximation est $\mu + \xi \ll \tau$.
-\end{itemize}
-\end{frame}
+%\section{Horloges Physiques}
+%\begin{frame}
+%\frametitle{Horloges Physiques : cas continu}
+%Soit $C_i(t)$, la lecture de l'horloge $C_i$ au temps physique $t$.
+%\begin{itemize}
+%\item On suppose que les horloges tournent en continu.
+%\item On passe des cas discrets au cas continus.
+%\item On suppose que $C_i(t)$ est \textit{dérivable},\\
+%	sauf pour les sauts discontinus où l'horloge est réinitialisée.
+%\item $\frac{\partial C_i(t)}{\partial t}$ représente la vitesse à laquelle l'horloge $C_i(t)$ fonctionne au temps $t$.
+%\item Ce taux devrait être $\approx 1$.
+%\end{itemize}
+%\end{frame}
+%
+%\begin{frame}
+%\frametitle{Propriétés}
+%\begin{block}{PC 1}
+%$\exists \kappa \ll 1$ tel que $\forall i, |\frac{\partial C_i(t)}{\partial t} - 1| < \kappa$
+%\end{block}
+%exemple : \textit{horloges à cristal $\kappa \leq 10^{-6}$}
+%Cette condition n'est pas assez forte : les horloges doivent être synchronisées entre elles c.à.d.
+%\[\forall i, j, t \ \ C_i(t) \approx C_j(t)\]
+%\begin{block}{PC 2}
+%$\exists \epsilon \ll 1, \forall i, j \ \ |C_i(t) - C_j(t)| < \epsilon$
+%\end{block}
+%$\kappa$ et $\epsilon$ doivent assurer d'éviter les anomalies.\\
+%\end{frame}
+%
+%\begin{frame}
+%\frametitle{\'Eviter les comportements anormaux}
+%Soient $\mu \in \mathbb{R}^{> 0}$ , $a, b$ des évènements de deux processus distincts et le temps physique $t$.\\
+%\textbf{Si $a$ se produit en $t$ et que $b$ satisfait {\color{cyan}$a \rightarrow b$}, alors $b$ se produit après {\color{cyan}$t + \mu$}}, $\mu$ est le plus petit temps de transmission entre deux processus.\\
+%exemple : Soient $sp$, le plus court chemin entre les processus et $c$, la vitesse de la lumière. On peut prendre $\mu = \frac{sp}{c}$
+%\begin{block}{Propriétés}
+%On suppose également que quand l'horloge est réinitialisée, elle est toujours remise en avant et jamais en arrière. Alors, pour éviter les comportements anormaux :
+%\[ C_i(t+\mu) - C_i(t) > (1 - \kappa)\mu\]
+%\[ C_i(t+\mu) - C_j(t) > 0 \text{ avec } \frac{\epsilon}{1-\kappa} \leq \mu \text{ (par PC 2)} \]
+%\end{block}
+%\end{frame}
+%
+%\begin{frame}
+%\frametitle{Délai d'envoi}
+%Soit $m$, un message envoyé au temps physique $t$ et reçu au temps $t'$.\\
+%{\color{cyan}$v_m = t' - t$} est le \textbf{\color{cyan}délai total} du message $m$.\\
+%Ce délai est non connu du processus qui reçoit $m$. On suppose par contre que tout processus recevant $m$ connait le\\ \textbf{\color{cyan} délai minimal de $m$ : } $0 \leq \mu_m \leq v_m$. \\
+%\textbf{\color{cyan} délai imprévisible de $m$ : }$\xi_m = v_m - \mu_m$
+%\end{frame}
+%
+%\begin{frame}
+%\frametitle{Implémentation}
+%\begin{block}{IR 1'}
+%$\forall i$, si $P_i$ ne reçoit pas un message au temps physique $t$, alors $C_i$ est dérivable en t et $\partial_t C_i (t) > 0$
+%\end{block}
+%
+%\begin{block}{IR 2'}
+%\begin{enumerate}[(a)]
+%\item Si $P_i$ envoie un message $m$ au temps physique $t$, alors $m$ contient un timestamp $T_m \leftarrow C_i(t)$.
+%\item Lorsqu'on reçoit un message $m$ au temps $t'$, le processus $P_j$ met à jour $C_j(t')$ : 
+%\[C_j(t') = \max (C_j(t'-0), T_m + \mu_m)\]\[\text{où } C_j(t'-0) = \lim_{\delta \rightarrow 0} C_j(t' - |\delta|)\]
+%\end{enumerate}
+%\end{block}
+%
+%\end{frame}
+%% Préviens si tu captes la fin, j'y comprends pas grand chose. Je tente quand même ma chance .
+%
+%\begin{frame}
+%\frametitle{PC2 satisfait ?}
+%On veut à présent montrer que \textbf{\color{cyan}PC2 est satisfait}.\\
+%On suppose que le système de processus est modélisé par un graphe :
+%\begin{figure}
+%	\includegraphics[scale=0.2]{process_graph.png}
+%\end{figure}
+%\begin{itemize}
+%\item Un message est envoyé sur cet arc toutes les $\tau$ secondes si $\forall t$, $P_i$ envoie au moins un message vers $P_j$ entre $t$ et $t+\tau$.
+%\item \textbf{\color{cyan}Diamètre $d$ du graphe} : le plus petit $d$ tel que pour toute paire $(P_i, P_j), \exists$ un chemin de $P_j$ à $P_k$ d'au moins $d$ arcs.
+%\end{itemize}
+%\end{frame}
+%
+%\begin{frame}
+%\frametitle{PC2 satisfait ?}
+%\begin{itemize}
+%\item On suppose donc que le graphe est \textbf{fortement connexe} et de \textbf{diamètre} $d$.
+%\item Le graphe obéi aux règle d'implémentation IR 1' et IR2'.
+%\item $\forall$ message $m$, $\mu_m \leq \mu$ pour une constante $\mu$ et $\forall t \geq t_0$.
+%	\begin{enumerate}[(a)]
+%	\item PC1 est respecté.
+%	\item $\exists \tau, \xi$ tels que toutes les $\tau$ secondes, un message avec un délai imprévisible plus petit que $\xi$ est envoyé sur chaque arc.
+%	\end{enumerate}
+%	Alors, PC2 est satisfait avec 
+%	\[\epsilon \approx d(2 \kappa \tau + \xi) \forall t \geq t_0+\tau d\]
+%	où l'approximation est $\mu + \xi \ll \tau$.
+%\end{itemize}
+%\end{frame}
 
 \end{document}

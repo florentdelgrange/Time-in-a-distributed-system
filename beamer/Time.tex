@@ -75,7 +75,7 @@ Problèmes : \\
 \begin{itemize}
 \item Le temps doit être observable dans le système
 \item Le système doit donc contenir des horloges 
-\item Celles-ci ne sont pas parfaitement fiable et ne donnent pas assez précisément le temps physique
+\item Celles-ci ne sont pas parfaitement fiables et ne donnent pas assez précisément le temps physique
 \end{itemize}
 \bigskip
 $\implies$ la relation \textit{est arrivé avant} doit s'exprimer sans horloge réelle.
@@ -150,10 +150,10 @@ $\implies$ Le système entier est représenté par la fonction $C$.
 \begin{frame}
 \frametitle{Conditions}
 \begin{block}{Condition faible}
-$a \rightarrow b \implies C$<$a$> $ < C$<$b$>
+$C$<$a$> $ < C$ <$b$> $\implies a \rightarrow b$
 \end{block}
 \bigskip
-Soient $a, b$ deux événements concurrents. \\On a $a \not\rightarrow b$  et $a \not\rightarrow b$ donc\\
+Soient $a, b$ deux événements concurrents. \\On a $a \not\rightarrow b$  et $b \not\rightarrow a$ donc, par la contraposée\\
 \begin{center}
 $C$<$a$>  $\geq$ $C$<$b$> $\land$ $C$<$a$>  $\leq$ $C$<$b$>  $\implies$ $C$<$a$> = $C$<$b$>
 \end{center}

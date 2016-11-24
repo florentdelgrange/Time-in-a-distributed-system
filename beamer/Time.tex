@@ -35,6 +35,16 @@
 \tableofcontents
 \end{frame}
 
+
+\begin{frame}
+\begin{center}
+\textit{Time, clocks, and the ordering of events in a distributed system}\\
+\end{center}
+\hspace{0.7cm} \textit{ Leslie Lamport}\\
+\bigskip
+\hspace{0.7cm}  \textit{Communications of the ACM, juillet 1978}
+\end{frame}
+
 \section{Introduction}
 
 \begin{frame}
@@ -290,7 +300,7 @@ Afin de simplifier le problème nous ferons les suppositions suivantes : \\ \big
 \item On suppose que chaque message envoyé finit toujours par être reçu.
 \item On suppose qu'un processus peut envoyer des messages vers tout autre processus.
 \end{enumerate}
-Notons que les deux premières suppositions peuvent être évitées en utilisant des numéros de messages et un protocole d'accusé de réception.
+Notons que les deux premières suppositions peuvent être évitées en utilisant des numéros de messages et un protocole d'acknowledgement.
 \end{frame}
 
 \begin{frame}
@@ -318,7 +328,7 @@ Notons que les deux premières suppositions peuvent être évitées en utilisant
 \frametitle{Algorithme}
 	\begin{columns}
     	\begin{column}{.6\textwidth}
-			Lorsque le processus $P_j$ reçoit le message $T_m : P_i$, il le place dans sa file de requête et envoie un accusé de réception à $P_i$
+			Lorsque le processus $P_j$ reçoit le message $T_m : P_i$, il le place dans sa file de requête et envoie un acknowledgement à $P_i$
 		\end{column}
 		\begin{column}{.4\textwidth}
 		\begin{center}
